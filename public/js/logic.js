@@ -1,5 +1,3 @@
-const { render } = require("pug");
-
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
@@ -39,15 +37,12 @@ const music = {
         },
     ],
 
-    start: function(){
-        render();
-    },
-    render: function(listSong){
+    render: function(){
         var playList = $('.playlist');
-        var html = lists.map(function(list){
+        var html = this.song.map(function(list){
             return `
                 <div class="song">
-                    <div class="thumb" style="url('${list.img}')">
+                    <div class="thumb" style="background-image: url('${list.img}')">
                     </div>
                     <div class="body">
                         <h3 class="title">${list.name}</h3>
@@ -60,7 +55,11 @@ const music = {
             `
         })
         playList.innerHTML = html.join('');
-    }
+    },
+
+    start: function(){
+        this.render();
+    },
 }
 
 music.start();
