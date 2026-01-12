@@ -1,17 +1,8 @@
+const { render } = require("pug");
+
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const player = $(".player");
-const cd = $(".cd");
-const heading = $("header h2");
-const cdThumb = $(".cd-thumb");
-const audio = $("#audio");
-const playBtn = $(".btn-toggle-play");
-const progress = $("#progress");
-const prevBtn = $(".btn-prev");
-const nextBtn = $(".btn-next");
-const randomBtn = $(".btn-random");
-const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
 
 const music = {
@@ -47,4 +38,29 @@ const music = {
             img: '../public/img/Tachyon.jpg'
         },
     ],
+
+    start: function(){
+        render();
+    },
+    render: function(listSong){
+        var playList = $('.playlist');
+        var html = lists.map(function(list){
+            return `
+                <div class="song">
+                    <div class="thumb" style="url('${list.img}')">
+                    </div>
+                    <div class="body">
+                        <h3 class="title">${list.name}</h3>
+                        <p class="author">${list.singer}</p>
+                    </div>
+                    <div class="option">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+            `
+        })
+        playList.innerHTML = html.join('');
+    }
 }
+
+music.start();
