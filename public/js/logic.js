@@ -79,8 +79,7 @@ const music = {
 
     start: function(){
         this.handleEvents();
-        defineProperties();
-        this.currentSong();
+        this.defineProperties();
         this.render();
     },
 }
