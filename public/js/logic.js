@@ -58,7 +58,7 @@ const music = {
     },
 
     defineProperties: function(){
-        Object.defineProperty(this, 'currentSong', {
+        Object.defineProperty(this,'currentSong', {
             get: function(){
                 return this.song[this.currentIndex];
             }
@@ -70,9 +70,9 @@ const music = {
         const cd = $('.cd');
         const cdWidth = cd.offsetWidth;
         document.onscroll = function(){
-            const scrollTop = window.screenY || document.documentElement.scrollTop;
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
             const newCdWidth = cdWidth - scrollTop;
-            cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0; 
+            cd.style.width = newCdWidth > 0 ? cdWidth - scrollTop + 'px' : 0;
             cd.style.opacity = newCdWidth / cdWidth;
         }
     },
@@ -84,7 +84,7 @@ const music = {
 
         header.innerText = this.currentSong.name;
         cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
-        audio.src = this.currentSong.path;
+        audio.src = this.currentSong.path; 
     },
 
     start: function(){
