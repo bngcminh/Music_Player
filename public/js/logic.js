@@ -60,7 +60,7 @@ const music = {
     defineProperties: function(){
         Object.defineProperty(this, 'currentSong', {
             get: function(){
-                return this.song[currentIndex];
+                return this.song[this.currentIndex];
             }
         })
     },
@@ -77,9 +77,20 @@ const music = {
         }
     },
 
+    loadCurrentSong: function(){
+        const header = $('header h2');
+        const cdThumb = $('.cd-thumb');
+        const audio = $('#audio');
+
+        header.innerText = this.currentSong.name;
+        cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
+        audio.src = this.currentSong.path;
+    },
+
     start: function(){
         this.handleEvents();
         this.defineProperties();
+        this.loadCurrentSong();
         this.render();
     },
 }
