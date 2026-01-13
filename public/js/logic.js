@@ -57,18 +57,18 @@ const music = {
     },
 
     // handle event
-    handleEvent: function(){
+    handleEvents: function(){
         const cd = $('.cd');
         const cdWidth = cd.offsetWidth;
         document.onscroll = function(){
-            const scroll = window.scrollY || document.documentElement.scrollTop;
-            const newCdWidth = cdWidth - scroll;
-            cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0;
+            const scrollTop = window.screenY || document.documentElement.scrollTop;
+            const newCdWidth = cdWidth - scrollTop;
+            cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0; 
         }
     },
 
     start: function(){
-        this.handleEvent();
+        this.handleEvents();
         this.render();
     },
 }
