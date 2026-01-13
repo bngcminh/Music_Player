@@ -2,6 +2,7 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
 const music = {
+    currentIndex: 0,
     song: [
         {
             name: 'A Stranger I Remain',
@@ -56,6 +57,14 @@ const music = {
         playList.innerHTML = html.join('');
     },
 
+    defineProperties: function(){
+        Object.defineProperty(this, 'currentSong', {
+            get: function(){
+                return this.song[currentIndex];
+            }
+        })
+    },
+
     // handle event
     handleEvents: function(){
         const cd = $('.cd');
@@ -64,11 +73,14 @@ const music = {
             const scrollTop = window.screenY || document.documentElement.scrollTop;
             const newCdWidth = cdWidth - scrollTop;
             cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0; 
+            cd.style.opacity = newCdWidth / cdWidth;
         }
     },
 
     start: function(){
         this.handleEvents();
+        defineProperties();
+        this.currentSong();
         this.render();
     },
 }
