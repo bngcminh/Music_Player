@@ -1,8 +1,6 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const playlist = $(".playlist");
-
 const music = {
     song: [
         {
@@ -37,6 +35,7 @@ const music = {
         },
     ],
 
+    // handle render playlist
     render: function(){
         var playList = $('.playlist');
         var html = this.song.map(function(list){
@@ -57,7 +56,19 @@ const music = {
         playList.innerHTML = html.join('');
     },
 
+    // handle event
+    handleEvent: function(){
+        const cd = $('.cd');
+        const cdWidth = cd.offsetWidth;
+        document.onscroll = function(){
+            const scroll = window.scrollY || document.documentElement.scrollTop;
+            const newCdWidth = cdWidth - scroll;
+            cd.style.width = newCdWidth > 0 ? newCdWidth + 'px' : 0;
+        }
+    },
+
     start: function(){
+        this.handleEvent();
         this.render();
     },
 }
