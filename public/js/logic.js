@@ -84,27 +84,24 @@ const music = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
-        // Handle play song
+        // Handle play-pause song
         const _this = this;
         
-        // playBtn.addEventListener('click', function(){
-        //     if(_this.isPlaying){
-        //         audio.play()
-        //     }else{
-        //         audio.pause();
-        //     }
-        // })
-
-        playBtn.onplay = function(){
-            // _this.isPlaying = true;
-            player.classList.add('playing')
-            audio.play();
+        playBtn.onclick = function(){
+            if(_this.isPlaying){
+                audio.pause();
+            }else{
+                audio.play();
+            }
+        }
+        audio.onplay = function(){
+            _this.isPlaying = true;
+            player.classList.add('playing');
         }
 
-        playBtn.onpause = function(){
-            // _this.isPlaying = false;
+        audio.onpause = function(){
+            _this.isPlaying = false;
             player.classList.remove('playing');
-            audio.pause();
         }
     },
 
