@@ -18,6 +18,7 @@ const music = {
     currentIndex: 0,
     isPlaying: false,
     isRepeat: false,
+    isRandom: false,
     song: [
         {
             name: 'A Stranger I Remain',
@@ -174,14 +175,52 @@ const music = {
             audio.play();
         }
 
-        // Hàm xử lý lặp bài hát
-        randomBtn.onclick = function(){
-            audio.onended = function(){
-                if(is)
-            }
+        // Hàm xử lý chuyển bài hát và lặp lại bài hát ngẫu nhiên
+        repeatBtn.onclick = function(){
+            _this.isRepeat = !_this.isRepeat;
         }
 
-        // Hàm xử lý chuyển bài hát ngẫu nhiên
+        // audio.onended = function(){
+        //     if(_this.isRepeat){
+        //         audio.currentTime = 0;
+        //         audio.play();
+        //     }else{
+        //         _this.currentIndex++;
+        //         if(_this.currentIndex >= _this.song.length){
+        //             _this.currentIndex = 0;
+        //         }
+        //         _this.loadCurrentSong();
+        //         audio.play();
+        //     }
+        // }
+
+        randomBtn.onclick = function(){
+            _this.isRandom = !_this.isRandom;
+            console.log(_this.isRandom);
+        }
+
+        audio.onended = function(){
+            if(_this.isRepeat){
+                audio.currentTime = 0;
+                audio.play();
+            }else if(_this.isRandom){
+                let randomIndex = Math.floor(Math.random() * _this.song.length);
+                while(randomIndex == _this.currentIndex){
+                    randomIndex = Math.floor(Math.random() * _this.song.length);
+                }
+                _this.currentIndex = randomIndex;
+                _this.loadCurrentSong();
+                audio.play();
+            }else{
+                _this.currentIndex++;
+                if(_this.currentIndex >= _this.song.length){
+                    _this.currentIndex = 0;
+                }
+                _this.loadCurrentSong();
+                audio.play();
+            }
+            
+        }
     },
 
     
