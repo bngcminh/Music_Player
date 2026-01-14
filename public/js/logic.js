@@ -8,6 +8,7 @@ const cdThumb = $('.cd-thumb');
 const audio = $('#audio');
 const playList = $('.playlist');
 const playBtn = $('.btn.btn-toggle-play')
+const progress = $('.progress');
 
 const music = {
     currentIndex: 0,
@@ -45,7 +46,7 @@ const music = {
         },
     ],
 
-    // handle render playlist
+    // Hàm hiển thị danh sách bài hát 
     render: function(){
         var html = this.song.map(function(list){
             return `
@@ -65,6 +66,7 @@ const music = {
         playList.innerHTML = html.join('');
     },
 
+    // Hàm định nghĩa
     defineProperties: function(){
         Object.defineProperty(this,'currentSong', {
             get: function(){
@@ -73,9 +75,9 @@ const music = {
         })
     },
 
-    // handle event
+    // Hàm xử lý các sự kiện
     handleEvents: function(){
-        // Handle CD size
+        // Hàm điều chỉnh kích cỡ CD
         const cdWidth = cd.offsetWidth;
         document.onscroll = function(){
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -84,7 +86,7 @@ const music = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
-        // Handle play-pause song
+        // Hàm xử lý bật tắt bài hạt
         const _this = this;
         
         playBtn.onclick = function(){
@@ -103,8 +105,24 @@ const music = {
             _this.isPlaying = false;
             player.classList.remove('playing');
         }
+
+        // Hàm xử lý tua bài hát
+        audio.ontimeupdate = function(){
+            if(audio.duration){
+                const progressPercent = Math.floor(audio.currentTime / audio.duration * 100);
+                progress.value = progressPercent; 
+            }
+            console.log(audio.currentTime)
+        }
+        progress.oninput = function(){
+            if(audio.duration){
+                const seekTime = (audio.duration / 100 * progress.value);
+                audio.currentTime = seekTime;
+            }
+        }
     },
 
+    // Hàm tải và hiển thị bài hát đầu tiên 
     loadCurrentSong: function(){
         header.innerText = this.currentSong.name;
         cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
