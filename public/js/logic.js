@@ -86,6 +86,16 @@ const music = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
+        // Hàm tạo animation cho CD
+        const cdAnimation = cdThumb.animate([
+            { transform: 'rotate(360deg)' }
+        ], {
+            duration: 10000,
+            iterations: Infinity
+        })
+        cdAnimation.pause();
+        console.log(cdAnimation)
+
         // Hàm xử lý bật tắt bài hạt
         const _this = this;
         
@@ -99,11 +109,13 @@ const music = {
         audio.onplay = function(){
             _this.isPlaying = true;
             player.classList.add('playing');
+            cdAnimation.play();
         }
 
         audio.onpause = function(){
             _this.isPlaying = false;
             player.classList.remove('playing');
+            cdAnimation.pause();
         }
 
         // Hàm xử lý tua bài hát
