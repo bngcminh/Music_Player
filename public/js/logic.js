@@ -1,8 +1,17 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const player = $('.player');
+const cd = $('.cd');
+const header = $('header h2');
+const cdThumb = $('.cd-thumb');
+const audio = $('#audio');
+const playList = $('.playlist');
+const playBtn = $('.btn.btn-toggle-play')
+
 const music = {
     currentIndex: 0,
+    isPlaying: false,
     song: [
         {
             name: 'A Stranger I Remain',
@@ -38,7 +47,6 @@ const music = {
 
     // handle render playlist
     render: function(){
-        var playList = $('.playlist');
         var html = this.song.map(function(list){
             return `
                 <div class="song">
@@ -67,7 +75,7 @@ const music = {
 
     // handle event
     handleEvents: function(){
-        const cd = $('.cd');
+        // Handle CD size
         const cdWidth = cd.offsetWidth;
         document.onscroll = function(){
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -75,13 +83,32 @@ const music = {
             cd.style.width = newCdWidth > 0 ? cdWidth - scrollTop + 'px' : 0;
             cd.style.opacity = newCdWidth / cdWidth;
         }
+
+        // Handle play song
+        const _this = this;
+        
+        // playBtn.addEventListener('click', function(){
+        //     if(_this.isPlaying){
+        //         audio.play()
+        //     }else{
+        //         audio.pause();
+        //     }
+        // })
+
+        playBtn.onplay = function(){
+            // _this.isPlaying = true;
+            player.classList.add('playing')
+            audio.play();
+        }
+
+        playBtn.onpause = function(){
+            // _this.isPlaying = false;
+            player.classList.remove('playing');
+            audio.pause();
+        }
     },
 
     loadCurrentSong: function(){
-        const header = $('header h2');
-        const cdThumb = $('.cd-thumb');
-        const audio = $('#audio');
-
         header.innerText = this.currentSong.name;
         cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
         audio.src = this.currentSong.path; 
