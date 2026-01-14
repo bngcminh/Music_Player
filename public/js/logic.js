@@ -54,9 +54,9 @@ const music = {
 
     // Hàm hiển thị danh sách bài hát 
     render: function(){
-        var html = this.song.map(function(list){
+        var html = this.song.map((list, index) => {
             return `
-                <div class="song">
+                <div class="song ${index === this.currentIndex ? 'active' : ''}" data-index="${index}">
                     <div class="thumb" style="background-image: url('${list.img}')">
                     </div>
                     <div class="body">
@@ -149,6 +149,7 @@ const music = {
             } 
             _this.loadCurrentSong();
             audio.play();
+            _this.render();
         } 
 
         // Hàm xử lý chuyển tiếp và lùi bài hát
@@ -161,6 +162,7 @@ const music = {
             }
             _this.loadCurrentSong();
             audio.play();
+            _this.render();
         }
 
         prevBtn.onclick = function(){
@@ -173,11 +175,14 @@ const music = {
             }
             _this.loadCurrentSong();
             audio.play();
+            _this.render();
         }
 
         // Hàm xử lý chuyển bài hát và lặp lại bài hát ngẫu nhiên
         repeatBtn.onclick = function(){
             _this.isRepeat = !_this.isRepeat;
+            repeatBtn.classList.toggle('active', _this.isRepeat);
+            _this.render();
         }
 
         // audio.onended = function(){
@@ -196,13 +201,28 @@ const music = {
 
         randomBtn.onclick = function(){
             _this.isRandom = !_this.isRandom;
-            console.log(_this.isRandom);
+            randomBtn.classList.toggle('active', _this.isRandom);
+            // console.log(_this.isRandom);
+        }
+
+        // Hàm xử lý chọn bài hát
+        playList.onclick = function(e){
+            const songNode = e.target.closest('.song:not(.active)');
+            const option = !e.target.closest('.option');
+            console.log(songNode, option);
+            if(songNode && option){
+                _this.currentIndex = +songNode.dataset.index;
+                _this.loadCurrentSong();
+                _this.render();
+                audio.play();
+            }
         }
 
         audio.onended = function(){
             if(_this.isRepeat){
                 audio.currentTime = 0;
                 audio.play();
+                _this.render();
             }else if(_this.isRandom){
                 let randomIndex = Math.floor(Math.random() * _this.song.length);
                 while(randomIndex == _this.currentIndex){
@@ -211,6 +231,7 @@ const music = {
                 _this.currentIndex = randomIndex;
                 _this.loadCurrentSong();
                 audio.play();
+                _this.render();
             }else{
                 _this.currentIndex++;
                 if(_this.currentIndex >= _this.song.length){
@@ -218,6 +239,7 @@ const music = {
                 }
                 _this.loadCurrentSong();
                 audio.play();
+                _this.render();
             }
             
         }
@@ -230,6 +252,7 @@ const music = {
         header.innerText = this.currentSong.name;
         cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
         audio.src = this.currentSong.path; 
+        this.render();
     },
 
     start: function(){
