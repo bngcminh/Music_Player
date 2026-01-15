@@ -13,12 +13,16 @@ const prevBtn = $('.btn.btn-prev');
 const repeatBtn = $('.btn.btn-repeat');
 const randomBtn = $('.btn.btn-random');
 const progress = $('.progress');
+const volume = $('.volume');
+
+const Key_Storage = 'My_Playlist'
 
 const music = {
     currentIndex: 0,
     isPlaying: false,
     isRepeat: false,
     isRandom: false,
+    config: {},
     song: [
         {
             name: 'A Stranger I Remain',
@@ -146,7 +150,8 @@ const music = {
             _this.currentIndex++
             if(_this.currentIndex >= _this.song.length){
                 _this.currentIndex = 0;
-            } 
+            }
+            _this.saveSong();
             _this.loadCurrentSong();
             audio.play();
             _this.render();
@@ -160,6 +165,7 @@ const music = {
             if(_this.currentIndex >= _this.song.length){
                 _this.currentIndex = 0;
             }
+            _this.saveSong();
             _this.loadCurrentSong();
             audio.play();
             _this.render();
@@ -173,6 +179,7 @@ const music = {
                 _this.currentIndex = _this.song.length - 1;
                 // console.log('Gia tri cua index: ', _this.currentIndex);
             }
+            _this.saveSong();
             _this.loadCurrentSong();
             audio.play();
             _this.render();
@@ -212,6 +219,7 @@ const music = {
             console.log(songNode, option);
             if(songNode && option){
                 _this.currentIndex = +songNode.dataset.index;
+                _this.saveSong();
                 _this.loadCurrentSong();
                 _this.render();
                 audio.play();
@@ -229,6 +237,7 @@ const music = {
                     randomIndex = Math.floor(Math.random() * _this.song.length);
                 }
                 _this.currentIndex = randomIndex;
+                _this.saveSong();
                 _this.loadCurrentSong();
                 audio.play();
                 _this.render();
@@ -237,15 +246,43 @@ const music = {
                 if(_this.currentIndex >= _this.song.length){
                     _this.currentIndex = 0;
                 }
+                _this.saveSong();
                 _this.loadCurrentSong();
                 audio.play();
                 _this.render();
             }
-            
         }
+
+        // Ham xu ly tang giam am luong
+        volume.oninput = function(){
+            audio.volume = volume.value / 100;
+            console.log(audio.volume);
+        }
+    }, 
+
+    saveSong: function(){
+        this.config = {
+            currentIndex: this.currentIndex,
+            currentTime: audio.currentTime,
+            isRepeat: this.isRepeat,
+            isRandom: this.isRandom
+        }
+        localStorage.setItem(Key_Storage, JSON.stringify(this.config))
     },
 
-    
+    loadSaveSong: function(){
+        const save = localStorage.getItem(Key_Storage);
+        if(save){
+            const config = JSON.parse(save);
+            this.currentIndex = config.currentIndex ?? 0;
+            this.isRepeat = config.isRepeat ?? false;
+            this.isRandom = config.isRandom ?? false;
+
+            audio.onloadmetadata = function(){
+                audio.currentTime = config.currentTime ?? 0;
+            }
+        }
+    },
 
     // Hàm tải và hiển thị bài hát đầu tiên 
     loadCurrentSong: function(){
@@ -256,9 +293,10 @@ const music = {
     },
 
     start: function(){
-        this.handleEvents();
+        this.loadSaveSong();
         this.defineProperties();
         this.loadCurrentSong();
+        this.handleEvents();
         this.render();
     },
 }
